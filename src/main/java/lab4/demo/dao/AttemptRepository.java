@@ -1,4 +1,4 @@
-package lab4.demo.repositories;
+package lab4.demo.dao;
 
 import lab4.demo.models.Attempt;
 import org.springframework.data.repository.CrudRepository;

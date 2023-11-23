@@ -1,4 +1,4 @@
-package lab4.demo.utilities;
+package lab4.demo.services;
 
 public class Checker {
     public static boolean checkHit(double x, double y, int r) {

@@ -13,6 +13,14 @@ public class CollectionAttempts {
     // потому что взаимодействия с коллекциями могут происходить в разных потоках.
     private final List<Attempt> attempts = new ArrayList<>();
 
+    //функция нужна, потому что могут быть изменения бд при непосредственном взаимодействии
+    public void update(Iterable<Attempt> newIterable) {
+        attempts.clear();
+        for (Attempt attempt : newIterable) {
+            attempts.add(attempt);
+        }
+    }
+
     public void add(Attempt attempt) {
         attempts.add(attempt);
     }

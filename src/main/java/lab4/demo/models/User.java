@@ -1,6 +1,7 @@
 package lab4.demo.models;
 
 import jakarta.persistence.*;
+import lab4.demo.services.PasswordManager;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -17,11 +18,12 @@ public class User {
     private String login;
 
     @Column(nullable = false, unique = true)
-    private String password;
+    private String password;  // hash
 
     public User(String login, String password) {
         id = 0L;
         this.login = login;
-        this.password = password;
+//        this.password = password;
+        this.password = PasswordManager.getHash(password);
     }
 }

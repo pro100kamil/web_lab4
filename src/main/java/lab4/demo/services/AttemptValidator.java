@@ -1,4 +1,4 @@
-package lab4.demo.utilities;
+package lab4.demo.services;
 
 public class AttemptValidator {
     public static boolean validateX(String strX) {

@@ -1,7 +1,7 @@
 package lab4.demo.models;
 
 import jakarta.persistence.*;
-import lab4.demo.utilities.Checker;
+import lab4.demo.services.Checker;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "attempts")
 public class Attempt {
+    //TODO сделать чтобы попытка хранила юзера который сделал эту попытку
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

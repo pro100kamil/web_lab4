@@ -1,7 +1,9 @@
 package lab4.demo.controllers;
 
+import lab4.demo.dto.UserDto;
 import lab4.demo.models.User;
-import lab4.demo.repositories.UserRepository;
+import lab4.demo.dao.UserRepository;
+import lab4.demo.services.PasswordManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,11 +18,14 @@ public class FirstController {
     }
 
     @CrossOrigin
-    @GetMapping("/check")
-    public User check_user(@RequestParam(value = "login") String login,
-                          @RequestParam(value = "password") String password) {
+    @PostMapping("/check")
+//    public User check_user(@RequestParam(value = "login") String login,
+//                          @RequestParam(value = "password") String password) {
+    //RequestBody вместо RequestParam, потому RequestParam работает только с адресной строкой
+    public User check_user(@RequestBody UserDto userDto) {
+        String hashPassword = PasswordManager.getHash(userDto.getPassword());
         for (User user : userRepository.findAll()) {
-            if (user.getLogin().equals(login) && user.getPassword().equals(password)) {
+            if (user.getLogin().equals(userDto.getLogin()) && user.getPassword().equals(hashPassword)) {
                 return user;
             }
         }
@@ -29,9 +34,9 @@ public class FirstController {
 
     @CrossOrigin
     @PostMapping("/new")
-    public User get_new_user(@RequestParam(value = "login", required = false, defaultValue = "def") String login,
-                          @RequestParam(value = "password", required = false, defaultValue = "def") String password) {
-        System.out.println(login + " : " + password);
+    public User get_new_user(@RequestBody UserDto userDto) {
+        String login = userDto.getLogin();
+        String password = userDto.getPassword();
         for (User user : userRepository.findAll()) {
             //пользователь с таким логином уже существует
             if (user.getLogin().equals(login)) {
@@ -40,7 +45,6 @@ public class FirstController {
         }
         User user = new User(login, password);
         userRepository.save(user);
-        //TODO сделать хеширование
         return user;
     }
 }
