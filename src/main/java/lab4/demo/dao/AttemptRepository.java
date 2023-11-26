@@ -1,10 +1,15 @@
 package lab4.demo.dao;
 
 import lab4.demo.models.Attempt;
-import org.springframework.data.repository.CrudRepository;
+import lab4.demo.models.User;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-@Repository
-public interface AttemptRepository extends CrudRepository<Attempt, Long> {
+import java.util.List;
 
+@Repository
+public interface AttemptRepository extends JpaRepository<Attempt, Long> {
+    List<Attempt> findByUser(User user);
+
+    void deleteByUser(User user);
 }
