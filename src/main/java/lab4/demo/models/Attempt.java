@@ -27,10 +27,15 @@ public class Attempt {
     @Column(nullable = false)
     private boolean isHit;
 
-    public Attempt(String strX, String strY, String strR) {
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+    public Attempt(String strX, String strY, String strR, User user) {
         x = Double.parseDouble(strX);
         y = Double.parseDouble(strY);
         r = Integer.parseInt(strR);
+        this.user = user;
 
         isHit = Checker.checkHit(this.x, this.y, this.r);
     }

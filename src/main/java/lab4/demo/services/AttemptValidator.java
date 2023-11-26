@@ -6,7 +6,7 @@ public class AttemptValidator {
         if (strX.length() > 7) return false;
         try {
             double x = Double.parseDouble(strX);
-            return -4 <= x && x <= 4;
+            return -5 <= x && x <= 5;
         }
         catch (NumberFormatException _ignored) {
             return false;
@@ -17,7 +17,7 @@ public class AttemptValidator {
         if (strY.length() > 7) return false;
         try {
             double y = Double.parseDouble(strY);
-            return -3 < y && y < 3;
+            return -5 <= y && y <= 5;
         }
         catch (NumberFormatException _ignored) {
             return false;

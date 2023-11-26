@@ -4,16 +4,23 @@ import lab4.demo.dto.PointDto;
 import lab4.demo.models.Attempt;
 import lab4.demo.models.CollectionAttempts;
 import lab4.demo.dao.AttemptRepository;
+import lab4.demo.models.User;
 import lab4.demo.services.AttemptValidator;
+import lab4.demo.services.AuthenticationManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/attempts")
 public class MainController {
+    //убрать collectionAttempts
     private CollectionAttempts collectionAttempts;
     private AttemptRepository attemptRepository;
 
+    private AuthenticationManager authenticationManager;
 
     @Autowired
     public void setCollectionAttempts(CollectionAttempts collectionAttempts) {
@@ -25,7 +32,13 @@ public class MainController {
         this.attemptRepository = attemptRepository;
     }
 
-//    Вариант через параметры адресной строки
+    @Autowired
+    public void setAuthenticationManager(AuthenticationManager authenticationManager) {
+        this.authenticationManager = authenticationManager;
+    }
+
+
+    //    Вариант через параметры адресной строки
 //    @PostMapping("/new")
 //    public Attempt check_hit(@RequestParam(value = "x") String strX,
 //                             @RequestParam(value = "y") String strY,
@@ -41,15 +54,26 @@ public class MainController {
 //    }
     @PostMapping("/new")
     @CrossOrigin
-    public Attempt check_hit(@RequestBody PointDto pointDto) {
+    public Attempt checkHit(@RequestHeader Map<String, String> headers, @RequestBody PointDto pointDto) {
+        System.out.println("headers:");
+        for (String name : headers.keySet()) {
+            System.out.println(name + ": " + headers.get(name));
+        }
+        System.out.println("--------------------");
+        String login = headers.get("login");
+        String password = headers.get("password");
+
+        User user = authenticationManager.getOldUserByHash(login, password);
+        if (user == null) {
+            System.out.println("user == null");
+            return null;
+        }
+
         String strX = pointDto.getStrX();
         String strY = pointDto.getStrY();
         String strR = pointDto.getStrR();
-        System.out.println("new point:");
-        System.out.println(strX + " " + strY + " " + strR);
         if (AttemptValidator.validateXYR(strX, strY, strR)) {
-            System.out.println("validate");
-            Attempt attempt = new Attempt(strX, strY, strR);
+            Attempt attempt = new Attempt(strX, strY, strR, user);
 
             collectionAttempts.update(attemptRepository.findAll());
 
@@ -62,14 +86,24 @@ public class MainController {
 
     @PostMapping("/clear")
     @CrossOrigin
-    public void clearAttempts() {
+    public void clearAttempts(@RequestHeader Map<String, String> headers) {
+        User user = authenticationManager.getOldUserByHash(headers.get("login"), headers.get("password"));
+        if (user == null) {
+            System.out.println("user == null");
+            return;
+        }
         attemptRepository.deleteAll();
         collectionAttempts.update(attemptRepository.findAll());
     }
 
     @GetMapping("/all")
     @CrossOrigin
-    public CollectionAttempts get_all_attempts() {
+    public CollectionAttempts getAllAttempts(@RequestHeader Map<String, String> headers) {
+        User user = authenticationManager.getOldUserByHash(headers.get("login"), headers.get("password"));
+        if (user == null) {
+            System.out.println("user == null");
+            return new CollectionAttempts(new ArrayList<>());
+        }
         collectionAttempts.update(attemptRepository.findAll());
         return collectionAttempts;
     }
