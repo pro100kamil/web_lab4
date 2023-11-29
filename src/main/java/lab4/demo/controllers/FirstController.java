@@ -1,10 +1,9 @@
 package lab4.demo.controllers;
 
+import lab4.demo.dao.UserRepository;
 import lab4.demo.dto.UserDto;
 import lab4.demo.models.User;
-import lab4.demo.dao.UserRepository;
 import lab4.demo.services.AuthenticationManager;
-import lab4.demo.services.PasswordManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,7 +40,10 @@ public class FirstController {
 
         User user = authenticationManager.getNewUser(login, password);
 
-        userRepository.save(user);
+        if (user != null) {
+            userRepository.save(user);
+        }
+
         return user;
     }
 }

@@ -79,7 +79,6 @@ public class MainController {
             return;
         }
         attemptRepository.deleteByUser(user);
-//        attemptRepository.deleteAll();
     }
 
     @GetMapping("/all")

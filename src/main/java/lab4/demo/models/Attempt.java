@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "attempts")
 public class Attempt {
-    //TODO сделать чтобы попытка хранила юзера который сделал эту попытку
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
