@@ -8,6 +8,7 @@ import java.util.List;
 
 @Data
 @Component
+//TODO удалить
 public class CollectionAttempts {
     //нужно использовать потокобезопасные коллекции,
     // потому что взаимодействия с коллекциями могут происходить в разных потоках.

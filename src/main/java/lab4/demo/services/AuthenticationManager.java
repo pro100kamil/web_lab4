@@ -1,5 +1,6 @@
 package lab4.demo.services;
 
+import lab4.demo.dao.RoleRepository;
 import lab4.demo.dao.UserRepository;
 import lab4.demo.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,10 +9,16 @@ import org.springframework.stereotype.Service;
 @Service
 public class AuthenticationManager {
     private UserRepository userRepository;
+    private RoleRepository roleRepository;
 
     @Autowired
     public void setUserRepository(UserRepository userRepository) {
         this.userRepository = userRepository;
+    }
+
+    @Autowired
+    public void setRoleRepository(RoleRepository roleRepository) {
+        this.roleRepository = roleRepository;
     }
 
     public User getNewUser(String login, String password) {
@@ -21,7 +28,7 @@ public class AuthenticationManager {
                 return null;
             }
         }
-        return new User(login, password);
+        return new User(login, password, roleRepository.findByName("min_user"));
     }
 
     public User getOldUser(String login, String password) {
