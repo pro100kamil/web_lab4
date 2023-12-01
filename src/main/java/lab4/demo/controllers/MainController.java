@@ -1,5 +1,6 @@
 package lab4.demo.controllers;
 
+import lab4.demo.annotations.HasAnyRole;
 import lab4.demo.dto.PointDto;
 import lab4.demo.models.Attempt;
 import lab4.demo.dao.AttemptRepository;
@@ -10,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -17,10 +20,13 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/attempts")
 public class MainController {
-    //убрать collectionAttempts
     private AttemptRepository attemptRepository;
 
     private AuthenticationManager authenticationManager;
+
+    private final String minUserRoleName = "min_user";
+    private final String averageUserRoleName = "average_user";
+    private final String maxUserRoleName = "max_user";
 
     @Autowired
     public void setAttemptRepository(AttemptRepository attemptRepository) {
@@ -33,22 +39,32 @@ public class MainController {
     }
 
 
-    //    Вариант через параметры адресной строки
-//    @PostMapping("/new")
-//    public Attempt check_hit(@RequestParam(value = "x") String strX,
-//                             @RequestParam(value = "y") String strY,
-//                             @RequestParam(value = "r") String strR) {
-//        //TODO рассмотреть возвращение ResponseEntity
-//        if (AttemptValidator.validateXYR(strX, strY, strR)) {
-//            Attempt attempt = new Attempt(strX, strY, strR);
-//            collectionAttempts.add(attempt);
-//            attemptRepository.save(attempt);
-//            return attempt;
-//        }
-//        return null;
-//    }
+//        //TODO рассмотреть возвращение ResponseEntity и возращение ошибок
+
+    @GetMapping("/all")
+    @CrossOrigin
+    @HasAnyRole(minRoleName = minUserRoleName)
+    public List<Attempt> getAllAttempts(@RequestHeader Map<String, String> headers) throws NoSuchMethodException {
+        User user = authenticationManager.getOldUserByHash(headers.get("login"), headers.get("password"));
+        if (user == null) {
+            return new ArrayList<>();
+        }
+
+//        Method method = MainController.class.getMethod("getAllAttempts", Map.class);
+//        Annotation annotation = method.getAnnotation(HasAnyRole.class);
+//        HasAnyRole hasAnyRole = (HasAnyRole) annotation;
+//        String minRoleName = hasAnyRole.minRoleName();
+
+
+
+//        System.out.println("------------------------");
+
+        return attemptRepository.findByUser(user);
+    }
+
     @PostMapping("/new")
     @CrossOrigin
+    @HasAnyRole(minRoleName = averageUserRoleName)
     public Attempt checkHit(@RequestHeader Map<String, String> headers, @RequestBody PointDto pointDto) {
         String login = headers.get("login");
         String password = headers.get("password");
@@ -73,6 +89,7 @@ public class MainController {
     @PostMapping("/clear")
     @CrossOrigin
     @Transactional
+    @HasAnyRole(minRoleName = maxUserRoleName)
     public void clearAttempts(@RequestHeader Map<String, String> headers) {
         User user = authenticationManager.getOldUserByHash(headers.get("login"), headers.get("password"));
         if (user == null) {
@@ -81,13 +98,19 @@ public class MainController {
         attemptRepository.deleteByUser(user);
     }
 
-    @GetMapping("/all")
-    @CrossOrigin
-    public List<Attempt> getAllAttempts(@RequestHeader Map<String, String> headers) {
-        User user = authenticationManager.getOldUserByHash(headers.get("login"), headers.get("password"));
-        if (user == null) {
-            return new ArrayList<>();
-        }
-        return attemptRepository.findByUser(user);
+    public void ahah(int a, String b) {
+
+    }
+
+    public static void main(String[] args) throws NoSuchMethodException {
+//        System.out.println(MainController.class.getMethod("ahah", int.class, String.class));
+        Method method = MainController.class.getMethod("clearAttempts", Map.class);
+        Annotation annotation = method.getAnnotation(HasAnyRole.class);
+        HasAnyRole hasAnyRole = (HasAnyRole) annotation;
+        String minRoleName = hasAnyRole.minRoleName();
+
+        System.out.println(minRoleName);
+
+        System.out.println("------------------------");
     }
 }

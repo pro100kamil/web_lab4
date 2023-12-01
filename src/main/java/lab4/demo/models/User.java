@@ -27,7 +27,6 @@ public class User {
     private Role role;
 
     public User(String login, String password, Role role) {
-        id = 0L;
         this.login = login;
         this.password = PasswordManager.getHash(password);
         this.role = role;
