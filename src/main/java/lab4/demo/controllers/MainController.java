@@ -8,8 +8,10 @@ import lab4.demo.models.User;
 import lab4.demo.services.AttemptValidator;
 import lab4.demo.services.AuthenticationManager;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -44,10 +46,11 @@ public class MainController {
     @GetMapping("/all")
     @CrossOrigin
     @HasAnyRole(minRoleName = minUserRoleName)
-    public List<Attempt> getAllAttempts(@RequestHeader Map<String, String> headers) throws NoSuchMethodException {
+    public List<Attempt> getAllAttempts(@RequestHeader Map<String, String> headers) {
         User user = authenticationManager.getOldUserByHash(headers.get("login"), headers.get("password"));
         if (user == null) {
-            return new ArrayList<>();
+//            return new ArrayList<>();
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         }
 
 //        Method method = MainController.class.getMethod("getAllAttempts", Map.class);
@@ -71,7 +74,7 @@ public class MainController {
 
         User user = authenticationManager.getOldUserByHash(login, password);
         if (user == null) {
-            return null;
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         }
 
         String strX = pointDto.getStrX();
@@ -93,7 +96,7 @@ public class MainController {
     public void clearAttempts(@RequestHeader Map<String, String> headers) {
         User user = authenticationManager.getOldUserByHash(headers.get("login"), headers.get("password"));
         if (user == null) {
-            return;
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         }
         attemptRepository.deleteByUser(user);
     }
