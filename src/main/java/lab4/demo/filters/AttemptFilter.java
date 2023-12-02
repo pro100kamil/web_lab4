@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.util.Collections;
+import java.util.Enumeration;
 
 @Component
 public class AttemptFilter implements Filter {
@@ -51,6 +53,11 @@ public class AttemptFilter implements Filter {
 
         String uri = req.getRequestURI();
 
+        System.out.println("Method: " + req.getMethod());
+        if (!req.getMethod().equals("POST") && !req.getMethod().equals("GET")) {
+            return;
+        }
+
         for (Method method : controllerClass.getMethods()) {
             Annotation annotation = method.getAnnotation(HasAnyRole.class);
             if (annotation == null) continue;
@@ -69,7 +76,13 @@ public class AttemptFilter implements Filter {
                 String login = req.getHeader("login");
                 String password = req.getHeader("password");
 
-                User user = authenticationManager.getOldUserByHash(login, password);
+                Collections.list(req.getHeaderNames()).stream().forEach(System.out::println);
+
+                String authorizationHeader = req.getHeader("authorization");
+                System.out.println(authorizationHeader);
+
+                User user = authenticationManager.getOldUserByAuthorizationHeader(authorizationHeader);
+//                User user = null;
                 if (user == null) continue;
 
                 String curRoleName = user.getRole().getName();
