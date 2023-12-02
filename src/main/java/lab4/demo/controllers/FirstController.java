@@ -5,7 +5,9 @@ import lab4.demo.dto.UserDto;
 import lab4.demo.models.User;
 import lab4.demo.services.AuthenticationManager;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("/api/users")
@@ -29,7 +31,13 @@ public class FirstController {
         String login = userDto.getLogin();
         String password = userDto.getPassword();
 
-        return authenticationManager.getOldUser(login, password);
+        User user = authenticationManager.getOldUser(login, password);
+
+        if (user == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
+
+        return user;
     }
 
     @CrossOrigin
@@ -40,9 +48,11 @@ public class FirstController {
 
         User user = authenticationManager.getNewUser(login, password);
 
-        if (user != null) {
-            userRepository.save(user);
+        if (user == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
+
+        userRepository.save(user);
 
         return user;
     }

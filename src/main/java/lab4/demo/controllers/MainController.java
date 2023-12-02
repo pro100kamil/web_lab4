@@ -41,7 +41,7 @@ public class MainController {
     }
 
 
-//        //TODO рассмотреть возвращение ResponseEntity и возращение ошибок
+//        //TODO рассмотреть возвращение ResponseEntity
 
     @GetMapping("/all")
     @CrossOrigin
@@ -49,18 +49,8 @@ public class MainController {
     public List<Attempt> getAllAttempts(@RequestHeader Map<String, String> headers) {
         User user = authenticationManager.getOldUserByHash(headers.get("login"), headers.get("password"));
         if (user == null) {
-//            return new ArrayList<>();
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         }
-
-//        Method method = MainController.class.getMethod("getAllAttempts", Map.class);
-//        Annotation annotation = method.getAnnotation(HasAnyRole.class);
-//        HasAnyRole hasAnyRole = (HasAnyRole) annotation;
-//        String minRoleName = hasAnyRole.minRoleName();
-
-
-
-//        System.out.println("------------------------");
 
         return attemptRepository.findByUser(user);
     }
@@ -80,13 +70,15 @@ public class MainController {
         String strX = pointDto.getStrX();
         String strY = pointDto.getStrY();
         String strR = pointDto.getStrR();
-        if (AttemptValidator.validateXYR(strX, strY, strR)) {
-            Attempt attempt = new Attempt(strX, strY, strR, user);
 
-            attemptRepository.save(attempt);
-            return attempt;
+        if (!AttemptValidator.validateXYR(strX, strY, strR)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
-        return null;
+
+        Attempt attempt = new Attempt(strX, strY, strR, user);
+
+        attemptRepository.save(attempt);
+        return attempt;
     }
 
     @PostMapping("/clear")
@@ -99,21 +91,5 @@ public class MainController {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         }
         attemptRepository.deleteByUser(user);
-    }
-
-    public void ahah(int a, String b) {
-
-    }
-
-    public static void main(String[] args) throws NoSuchMethodException {
-//        System.out.println(MainController.class.getMethod("ahah", int.class, String.class));
-        Method method = MainController.class.getMethod("clearAttempts", Map.class);
-        Annotation annotation = method.getAnnotation(HasAnyRole.class);
-        HasAnyRole hasAnyRole = (HasAnyRole) annotation;
-        String minRoleName = hasAnyRole.minRoleName();
-
-        System.out.println(minRoleName);
-
-        System.out.println("------------------------");
     }
 }
