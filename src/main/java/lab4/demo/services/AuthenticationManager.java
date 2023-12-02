@@ -2,6 +2,7 @@ package lab4.demo.services;
 
 import lab4.demo.dao.RoleRepository;
 import lab4.demo.dao.UserRepository;
+import lab4.demo.models.Role;
 import lab4.demo.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -52,5 +53,9 @@ public class AuthenticationManager {
             }
         }
         return null;
+    }
+
+    public Role getRoleByName(String roleName) {
+        return roleRepository.findByName(roleName);
     }
 }

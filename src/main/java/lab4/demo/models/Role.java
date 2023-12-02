@@ -8,11 +8,17 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 @Table(name = "roles")
-public class Role {
+public class Role implements Comparable<Role> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false, unique = true)
     private String name;
+
+    @Override
+    public int compareTo(Role otherRole) {
+        //допущение, что у роли с большими возможностями больше id
+        return id.compareTo(otherRole.getId());
+    }
 }
