@@ -40,14 +40,18 @@ public class MainController {
         this.authenticationManager = authenticationManager;
     }
 
-
-//        //TODO рассмотреть возвращение ResponseEntity
-
     @GetMapping("/all")
     @CrossOrigin
     @HasAnyRole(minRoleName = minUserRoleName)
     public List<Attempt> getAllAttempts(@RequestHeader Map<String, String> headers) {
-        User user = authenticationManager.getOldUserByHash(headers.get("login"), headers.get("password"));
+//        System.out.println(headers.get("authorization"));
+//
+//        for (String header : headers.keySet()) {
+//            System.out.println(header);
+//        }
+
+//        User user = authenticationManager.getOldUserByHash(headers.get("login"), headers.get("password"));
+        User user = authenticationManager.getOldUserByAuthorizationHeader(headers.get("authorization"));
         if (user == null) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         }
@@ -59,10 +63,8 @@ public class MainController {
     @CrossOrigin
     @HasAnyRole(minRoleName = averageUserRoleName)
     public Attempt checkHit(@RequestHeader Map<String, String> headers, @RequestBody PointDto pointDto) {
-        String login = headers.get("login");
-        String password = headers.get("password");
+        User user = authenticationManager.getOldUserByAuthorizationHeader(headers.get("authorization"));
 
-        User user = authenticationManager.getOldUserByHash(login, password);
         if (user == null) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         }
@@ -86,7 +88,8 @@ public class MainController {
     @Transactional
     @HasAnyRole(minRoleName = maxUserRoleName)
     public void clearAttempts(@RequestHeader Map<String, String> headers) {
-        User user = authenticationManager.getOldUserByHash(headers.get("login"), headers.get("password"));
+        User user = authenticationManager.getOldUserByAuthorizationHeader(headers.get("authorization"));
+
         if (user == null) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         }

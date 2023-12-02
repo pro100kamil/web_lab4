@@ -1,7 +1,6 @@
 package lab4.demo.models;
 
 import jakarta.persistence.*;
-import lab4.demo.dao.RoleRepository;
 import lab4.demo.services.PasswordManager;
 import lombok.Data;
 import lombok.NoArgsConstructor;

@@ -7,6 +7,8 @@ import lab4.demo.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Base64;
+
 @Service
 public class AuthenticationManager {
     private UserRepository userRepository;
@@ -53,6 +55,18 @@ public class AuthenticationManager {
             }
         }
         return null;
+    }
+
+    public User getOldUserByAuthorizationHeader(String authorizationHeader) {
+        String loginColonPassword = authorizationHeader.split(" ")[1];
+
+        byte[] decodedBytes = Base64.getDecoder().decode(loginColonPassword);
+        String decodedString = new String(decodedBytes);
+
+        String[] loginPassword = decodedString.split(":");
+        String login = loginPassword[0];
+        String password = loginPassword[1];
+        return getOldUser(login, password);
     }
 
     public Role getRoleByName(String roleName) {
