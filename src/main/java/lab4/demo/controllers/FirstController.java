@@ -27,33 +27,33 @@ public class FirstController {
 
     @CrossOrigin
     @PostMapping("/check")
-    public User checkUser(@RequestBody UserDto userDto) {
+    public boolean checkUser(@RequestBody UserDto userDto) {
         String login = userDto.getLogin();
         String password = userDto.getPassword();
 
         User user = authenticationManager.getOldUser(login, password);
 
         if (user == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "bad request");
         }
 
-        return user;
+        return true;
     }
 
     @CrossOrigin
     @PostMapping("/new")
-    public User getNewUser(@RequestBody UserDto userDto) {
+    public boolean getNewUser(@RequestBody UserDto userDto) {
         String login = userDto.getLogin();
         String password = userDto.getPassword();
 
         User user = authenticationManager.getNewUser(login, password);
 
         if (user == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "bad request");
         }
 
         userRepository.save(user);
 
-        return user;
+        return true;
     }
 }

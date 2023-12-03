@@ -1,9 +1,10 @@
 package lab4.demo.controllers;
 
 import lab4.demo.annotations.HasAnyRole;
+import lab4.demo.dao.AttemptRepository;
+import lab4.demo.dto.AttemptDto;
 import lab4.demo.dto.PointDto;
 import lab4.demo.models.Attempt;
-import lab4.demo.dao.AttemptRepository;
 import lab4.demo.models.User;
 import lab4.demo.services.AttemptValidator;
 import lab4.demo.services.AuthenticationManager;
@@ -13,9 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -43,30 +41,24 @@ public class MainController {
     @GetMapping("/all")
     @CrossOrigin
     @HasAnyRole(minRoleName = minUserRoleName)
-    public List<Attempt> getAllAttempts(@RequestHeader Map<String, String> headers) {
-//        System.out.println(headers.get("authorization"));
-//
-//        for (String header : headers.keySet()) {
-//            System.out.println(header);
-//        }
-
-//        User user = authenticationManager.getOldUserByHash(headers.get("login"), headers.get("password"));
+    public List<AttemptDto> getAllAttempts(@RequestHeader Map<String, String> headers) {
         User user = authenticationManager.getOldUserByAuthorizationHeader(headers.get("authorization"));
         if (user == null) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "unauthorized");
         }
 
-        return attemptRepository.findByUser(user);
+        return attemptRepository.findByUser(user).stream().map(
+                attempt -> new AttemptDto(attempt.getX(), attempt.getY(), attempt.getR(), attempt.isHit())).toList();
     }
 
     @PostMapping("/new")
     @CrossOrigin
     @HasAnyRole(minRoleName = averageUserRoleName)
-    public Attempt checkHit(@RequestHeader Map<String, String> headers, @RequestBody PointDto pointDto) {
+    public AttemptDto checkHit(@RequestHeader Map<String, String> headers, @RequestBody PointDto pointDto) {
         User user = authenticationManager.getOldUserByAuthorizationHeader(headers.get("authorization"));
 
         if (user == null) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "unauthorized");
         }
 
         String strX = pointDto.getStrX();
@@ -74,13 +66,13 @@ public class MainController {
         String strR = pointDto.getStrR();
 
         if (!AttemptValidator.validateXYR(strX, strY, strR)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "bad request");
         }
 
         Attempt attempt = new Attempt(strX, strY, strR, user);
 
         attemptRepository.save(attempt);
-        return attempt;
+        return new AttemptDto(attempt.getX(), attempt.getY(), attempt.getR(), attempt.isHit());
     }
 
     @PostMapping("/clear")
@@ -91,7 +83,7 @@ public class MainController {
         User user = authenticationManager.getOldUserByAuthorizationHeader(headers.get("authorization"));
 
         if (user == null) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "unauthorized");
         }
         attemptRepository.deleteByUser(user);
     }

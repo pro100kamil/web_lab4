@@ -18,7 +18,6 @@ import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.Collections;
-import java.util.Enumeration;
 
 @Component
 public class AttemptFilter implements Filter {
@@ -30,15 +29,10 @@ public class AttemptFilter implements Filter {
         this.authenticationManager = authenticationManager;
     }
 
-
-//    public void setAuthenticationManager(AuthenticationManager authenticationManager) {
-//        this.authenticationManager = authenticationManager;
-//    }
-
     private void setCorsHeaders(HttpServletRequest request, HttpServletResponse response) {
         response.setHeader("Access-Control-Allow-Origin", "http://localhost:4200");
         response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-        response.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, login, password");
+        response.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
     }
 
     @Override
@@ -73,19 +67,13 @@ public class AttemptFilter implements Filter {
                 HasAnyRole hasAnyRole = (HasAnyRole) annotation;
                 String minRoleName = hasAnyRole.minRoleName();
 
-                String login = req.getHeader("login");
-                String password = req.getHeader("password");
-
                 Collections.list(req.getHeaderNames()).stream().forEach(System.out::println);
 
                 String authorizationHeader = req.getHeader("authorization");
-                System.out.println(authorizationHeader);
 
                 User user = authenticationManager.getOldUserByAuthorizationHeader(authorizationHeader);
-//                User user = null;
-                if (user == null) continue;
 
-                String curRoleName = user.getRole().getName();
+                if (user == null) continue;
 
                 Role minRole = authenticationManager.getRoleByName(minRoleName);
                 Role curRole = user.getRole();
