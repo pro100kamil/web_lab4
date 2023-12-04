@@ -5,21 +5,12 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-/**
- * Класс для генерации хэша для пароля.
- */
 public class PasswordManager {
     private static final String algorithmName = "SHA-384";
     private static final int hashLength = 96;
 
     private static final String pepper = "*63&^mVLC(#";
 
-    /**
-     * Генерирует хэш пароля
-     *
-     * @param password - пароль
-     * @return String - хэш из пароля, перца
-     */
     public static String getHash(String password) {
         MessageDigest md;
         try {

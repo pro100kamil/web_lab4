@@ -4,7 +4,7 @@ import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lab4.demo.annotations.HasAnyRole;
-import lab4.demo.controllers.MainController;
+import lab4.demo.controllers.AttemptController;
 import lab4.demo.models.Role;
 import lab4.demo.models.User;
 import lab4.demo.services.AuthenticationManager;
@@ -17,12 +17,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.util.Collections;
 
 @Component
 public class AttemptFilter implements Filter {
     private final AuthenticationManager authenticationManager;
-    private final Class<MainController> controllerClass = MainController.class;
+    private final Class<AttemptController> controllerClass = AttemptController.class;
 
     @Autowired
     public AttemptFilter(AuthenticationManager authenticationManager) {
@@ -67,7 +66,8 @@ public class AttemptFilter implements Filter {
                 HasAnyRole hasAnyRole = (HasAnyRole) annotation;
                 String minRoleName = hasAnyRole.minRoleName();
 
-                Collections.list(req.getHeaderNames()).stream().forEach(System.out::println);
+                //вывод всех заголовков для тестирования может пригодиться
+//                Collections.list(req.getHeaderNames()).stream().forEach(System.out::println);
 
                 String authorizationHeader = req.getHeader("authorization");
 

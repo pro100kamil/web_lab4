@@ -19,7 +19,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/attempts")
-public class MainController {
+public class AttemptController {
     private AttemptRepository attemptRepository;
 
     private AuthenticationManager authenticationManager;
