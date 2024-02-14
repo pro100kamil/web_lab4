@@ -1,0 +1,122 @@
+/* main.css */
+* {
+    text-align: center;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: #bda1c2;
+    height: 100%;
+}
+
+p {
+    font-size: 16px;
+}
+
+.container { /* шапка и основное содержимое */
+    min-height: calc(100vh - 100px);
+}
+
+.header {
+    background-color: #f1c39c;
+    padding-bottom: 10px;
+    /*margin-bottom: 50px;*/
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-image: url("assets/images/biscuit1.png");
+}
+
+.header:hover {
+    background-image: url("assets/images/biscuit2.png");
+}
+
+.header:active {
+    background-image: url("assets/images/biscuit3.png");
+}
+
+@media (max-width: 1187px) {
+    .header {
+        background-image: url("assets/images/biscuit4.png");
+    }
+}
+
+.header h1 {
+    color: #771919;
+}
+
+.header > h2 {
+    color: #6b3431;
+}
+
+.header > a {
+    text-decoration: none;
+}
+
+.footer {
+    background-color: #282121;
+    height: 100px;
+    clear: both;
+}
+
+.footer > p {
+    color: #ac77e8;
+    padding-top: 40px;
+
+    /* анимация: */
+    transition-property: font-size, color;
+    transition-duration: 4s;
+    transition-timing-function: cubic-bezier(0, .5, .5, 1.5);;
+}
+
+.footer > p:hover {
+    color: pink;
+    font-size: 25px;
+}
+
+.main {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+form input[type="submit"], form input[type="button"], button {
+    margin: 5px;
+    padding: 15px;
+    border-radius: 15px;
+    border: 2px dashed blue;
+    color: blue;
+}
+
+form input[type="submit"]:disabled, form input[type="button"]:disabled, button:disabled {
+    color: red;
+    opacity: 0.4;
+    border: 2px dashed darkred;
+}
+
+form input[type="submit"]:hover, form input[type="button"]:hover, button:hover {
+    border-radius: 20px;
+    border: 2px solid darkblue;
+    color: cornflowerblue;
+}
+
+form input[type="submit"]:active, form input[type="button"]:active, button:active {
+    border-radius: 25px;
+    border: 2px solid darkgreen;
+    color: green;
+}
+
+form input[type="text"], form input[type="number"], form input[type="password"] {
+    padding: 5px;
+    border-radius: 15px;
+    width: 150px;
+}
+
+.error-message {
+    color: red;
+}
+
+.error-message:hover {
+    color: #650000;
+    font-weight: bold;
+}
+

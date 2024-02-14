@@ -1,0 +1,87 @@
+#div_canvas, #div_form, #div_table {
+    float: left;
+    width: 33%;
+}
+
+/*#div_form {*/
+/*    border: 1px solid black;*/
+/*}*/
+
+/*#div_form:hover {*/
+/*    border: 1px solid red;*/
+/*}*/
+
+@media (max-width: 1287px) {
+    #div_canvas, #div_form, #div_table {
+        float: right;
+    }
+
+    #div_canvas, #div_form {
+        width: 48%;
+    }
+}
+
+@media (max-width: 955px) {
+    #div_canvas, #div_form, #div_table {
+        width: 100%;
+    }
+}
+
+/*---------------------------------------------------------------------*/
+canvas {
+    border: 1px dashed black;
+}
+
+canvas:hover {
+    border: 1px solid red;
+}
+
+/*---------------------------------------------------------------------*/
+
+#div_form > form > p {
+    margin-bottom: 10px;
+}
+
+#div_form > form p {
+    margin-top: 40px;
+}
+
+#div_form > form input[type="text"], #div_form > form input[type="number"] {
+    padding: 10px;
+    border-radius: 15px;
+    width: 150px;
+}
+
+/*-------------------------------------------------------------------------------------------------------*/
+
+table {
+    margin: 10px auto;
+}
+
+.content td {
+    color: black;
+    font-size: 18px;
+}
+
+th, td {
+    padding: 10px;
+}
+
+td:hover {
+    font-style: italic;
+}
+
+table, td, th {
+    /* задаем границу для всех элементов */
+    border: 3px solid #245488;
+}
+
+/*-------------------------------------------------------------------------------------------------------*/
+
+input.ng-touched.ng-invalid {
+    border: solid red 2px;
+}
+
+input.ng-touched.ng-valid {
+    border: solid green 2px;
+}

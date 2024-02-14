@@ -1,0 +1,20 @@
+.register, .auth {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border: 2px solid black;
+    width: 48%;
+    float: left;
+}
+
+.register {
+    margin-right: 3%;
+}
+
+p#time {
+    border: 2px solid black;
+    font-size: 25px;
+}
+
+p#time > span:hover {
+    font-weight: bold;
+}

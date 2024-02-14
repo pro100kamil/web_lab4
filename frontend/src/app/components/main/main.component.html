@@ -1,0 +1,94 @@
+<div class="main">
+    <div id="div_canvas">
+        <canvas id="canvas" width="450px" height="450px" (click)="onCanvasClick($event)">
+
+        </canvas>
+    </div>
+
+    <div id="div_form">
+        <form #myForm="ngForm" action="" (ngSubmit)="onFormSubmit(myForm)"
+              class="ng-pristine ng-untouched ng-valid" novalidate="">
+            <p>
+                X<br>
+                <input [(ngModel)]="paramX" type="number" name="x_input" id="input_x"
+                       required min="-5" max="3"
+                       pattern="[-0-9]{1,2}"
+                       #x_input=ngModel
+                >
+                <br>
+                <span [hidden]="x_input.valid" class="error-message">
+                X должен быть целым числом на отрезке [-5;3]
+            </span>
+            </p>
+            <p>
+                Y<br>
+                <input [(ngModel)]="paramY" type="number" name="y_input" id="input_y"
+                       required min="-5" max="3"
+                       pattern="[-.,0-9]{1,7}"
+                       #y_input=ngModel
+                >
+                <br>
+                <span [hidden]="y_input.valid" class="error-message">
+                Y должен быть числом на отрезке [-5;3] (максимум 7 символов)
+            </span>
+            </p>
+            <p>
+                R<br>
+                <input [(ngModel)]="paramR" type="number" name="r_input" id="input_r"
+                       required min="1" max="5"
+                       pattern="[-0-9]{1,2}"
+                       (change)="radiusChanged()"
+                       #r_input=ngModel
+                >
+                <br>
+                <span [hidden]="r_input.valid" class="error-message">
+                R должен быть целым числом на отрезке [1;5]
+            </span>
+            </p>
+            <p>
+                <input type="submit" value="Отправить форму" [disabled]="myForm.invalid">
+                <input type="button" value="Очистить попытки" (click)="onClearButtonClick()">
+            </p>
+        </form>
+
+    </div>
+
+    <div id="div_table">
+        <p-table [value]="attempts">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>X</th>
+                    <th>Y</th>
+                    <th>R</th>
+                    <th>is hit</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-attempt>
+                <tr>
+                    <td>{{ attempt.x }}</td>
+                    <td>{{ attempt.y }}</td>
+                    <td>{{ attempt.r }}</td>
+                    <td>{{ attempt.hit }}</td>
+                </tr>
+            </ng-template>
+        </p-table>
+
+        <!--    <table border="1px black solid">-->
+        <!--        <tr>-->
+        <!--            <th>X</th>-->
+        <!--            <th>Y</th>-->
+        <!--            <th>R</th>-->
+        <!--            <th>Есть ли попадание</th>-->
+        <!--        </tr>-->
+        <!--        @for (item of attempts; track item) {-->
+        <!--            <tr>-->
+        <!--                <td>{{ item.x }}</td>-->
+        <!--                <td>{{ item.y }}</td>-->
+        <!--                <td>{{ item.r }}</td>-->
+        <!--                <td>{{ item.hit }}</td>-->
+        <!--            </tr>-->
+        <!--        }-->
+        <!--    </table>-->
+    </div>
+
+</div>

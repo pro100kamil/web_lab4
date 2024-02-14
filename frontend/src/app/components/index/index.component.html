@@ -1,0 +1,41 @@
+<div class="main">
+    <div>
+        <h3>Time:</h3>
+        <p id="time">
+            <span id="hours" style="color: red">hh</span>
+            :
+            <span id="minutes" style="color: yellow">mm</span>
+            :
+            <span id="seconds" style="color: green">ss</span>
+        </p>
+    </div>
+
+
+    <div *ngIf="!currentService.isAuthenticatedUser(); else authenticatedUser">
+        <div class="register">
+            <app-register></app-register>
+        </div>
+
+        <div class="auth">
+            <app-auth></app-auth>
+        </div>
+    </div>
+    <ng-template #authenticatedUser>
+        <div>
+            <p>You are an authenticated user!</p>
+            <button (click)="logout()">Logout</button>
+        </div>
+
+        <div>
+            <a routerLink="/main">Основная страница</a>
+        </div>
+    </ng-template>
+
+    <br>
+
+    <div>
+        <img src="assets/images/plot.png" alt=""/>
+    </div>
+</div>
+
+

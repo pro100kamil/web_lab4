@@ -1,0 +1,19 @@
+<!--<form action="" #myForm="ngForm" (ngSubmit)="onSubmit(myForm)">-->
+<form action="" #myForm="ngForm" (ngSubmit)="onSubmit(myForm)"
+      class="ng-pristine ng-untouched ng-valid" novalidate="">
+    <h3>Регистрация</h3>
+    <div>
+        <p>
+            <label>Логин</label><br>
+            <input type="text" [(ngModel)]="login" name="login_input" required pattern=".*\S+.*"/>
+        </p>
+        <p>
+            <label>Пароль</label><br>
+            <input type="password" [(ngModel)]="password" name="password_input" required pattern=".*\S+.*"/>
+        </p>
+        <p>
+            <input type="submit" value="Зарегистироваться" [disabled]="myForm.invalid">
+        </p>
+        <p id="register_error" class="error-message"></p>
+    </div>
+</form>
