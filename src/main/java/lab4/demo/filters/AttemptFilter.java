@@ -29,7 +29,10 @@ public class AttemptFilter implements Filter {
     }
 
     private void setCorsHeaders(HttpServletRequest request, HttpServletResponse response) {
-        response.setHeader("Access-Control-Allow-Origin", "http://localhost:4200");
+//        response.setHeader("Access-Control-Allow-Origin", "http://localhost:4200"); //local
+        response.setHeader("Access-Control-Allow-Origin", "https://se.ifmo.ru");    //helios
+        response.setHeader("Access-Control-Allow-Private-Network", "true");         //helios
+
         response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
         response.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
     }
@@ -66,23 +69,26 @@ public class AttemptFilter implements Filter {
                 HasAnyRole hasAnyRole = (HasAnyRole) annotation;
                 String minRoleName = hasAnyRole.minRoleName();
 
-                //вывод всех заголовков для тестирования может пригодиться
+                //вывод всех заголовков, для тестирования может пригодиться
 //                Collections.list(req.getHeaderNames()).stream().forEach(System.out::println);
 
                 String authorizationHeader = req.getHeader("authorization");
 
                 User user = authenticationManager.getOldUserByAuthorizationHeader(authorizationHeader);
 
-                if (user == null) continue;
+                if (user == null) {
+                    res.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
+                }
+                else {
+                    Role minRole = authenticationManager.getRoleByName(minRoleName);
+                    Role curRole = user.getRole();
 
-                Role minRole = authenticationManager.getRoleByName(minRoleName);
-                Role curRole = user.getRole();
 
-
-                if (curRole.compareTo(minRole) >= 0) {  // if (curRole >= minRole)
-                    chain.doFilter(req, res);
-                } else {
-                    res.sendError(HttpServletResponse.SC_FORBIDDEN, "Access denied");
+                    if (curRole.compareTo(minRole) >= 0) {  // if (curRole >= minRole)
+                        chain.doFilter(req, res);
+                    } else {
+                        res.sendError(HttpServletResponse.SC_FORBIDDEN, "Access denied");
+                    }
                 }
 
                 System.out.println("Response Status Code is: " + res.getStatus());

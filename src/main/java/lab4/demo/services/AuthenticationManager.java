@@ -25,12 +25,20 @@ public class AuthenticationManager {
     }
 
     public User getNewUser(String login, String password) {
-        for (User user : userRepository.findAll()) {
-            //пользователь с таким логином уже существует
-            if (user.getLogin().equals(login)) {
-                return null;
-            }
+        User user = userRepository.findByLogin(login);
+        //пользователь с таким логином уже существует
+        if (user != null) {
+            return null;
         }
+
+//        //не стоило делать перебор, потому что данные сохраняются в память
+//        for (User user : userRepository.findAll()) {
+//            //пользователь с таким логином уже существует
+//            if (user.getLogin().equals(login)) {
+//                return null;
+//            }
+//        }
+
         return new User(login, password, roleRepository.findByName("min_user"));
     }
 
@@ -38,17 +46,6 @@ public class AuthenticationManager {
         if (login == null || password == null) return null;
 
         String hashPassword = PasswordManager.getHash(password);
-        for (User user : userRepository.findAll()) {
-            if (user.getLogin().equals(login) && user.getPassword().equals(hashPassword)) {
-                return user;
-            }
-        }
-        return null;
-    }
-
-    public User getOldUserByHash(String login, String hashPassword) {
-        if (login == null || hashPassword == null) return null;
-
         for (User user : userRepository.findAll()) {
             if (user.getLogin().equals(login) && user.getPassword().equals(hashPassword)) {
                 return user;

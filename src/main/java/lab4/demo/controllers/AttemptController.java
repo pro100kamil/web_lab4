@@ -72,6 +72,7 @@ public class AttemptController {
         Attempt attempt = new Attempt(strX, strY, strR, user);
 
         attemptRepository.save(attempt);
+
         return new AttemptDto(attempt.getX(), attempt.getY(), attempt.getR(), attempt.isHit());
     }
 

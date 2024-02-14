@@ -5,7 +5,6 @@ import lab4.demo.services.PasswordManager;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-//TODO normal authorization
 @Data
 @NoArgsConstructor
 @Entity

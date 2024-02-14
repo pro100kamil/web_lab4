@@ -1,6 +1,7 @@
 package lab4.demo.services;
 
 public class AttemptValidator {
+    //стоило сделать все статические сервисы как реализации интерфейсов в целях расширяемости, но ладно
     public static boolean validateX(String strX) {
         if (strX == null) return false;
         if (strX.length() > 7) return false;
